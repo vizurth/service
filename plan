@@ -1,0 +1,21 @@
+postgres
+logger
+
+
+
+запустить postgres
+связать с postgress
+
+middleware c логгированием grpc intercepter
+
+
+create table schema_name.orders
+(
+    id    bigserial not null
+        constraint orders_pk
+            primary key,
+    name  text      not null,
+    price integer default 0
+);
+
+create table schema_name_2;

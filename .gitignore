@@ -1,0 +1,49 @@
+# Бинарные файлы и исполняемые файлы
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Выходные файлы сборки
+/bin/
+/pkg/
+/out/
+
+# Файлы зависимостей
+/vendor/
+
+# Локальные файлы конфигурации
+*.env
+.env.local
+.env.*.local
+
+# Логи
+*.log
+logs/
+*.log.*
+
+# Временные файлы
+*.tmp
+*.swp
+*~
+
+# Файлы тестирования и покрытия
+*.test
+*.prof
+coverage.out
+cover.html
+
+# Файлы IDE и редакторов
+.idea/
+*.iml
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Системные файлы macOS
+.DS_Store
+
+# Go-специфичные файлы
+*.go~
+go.sum  # Можно убрать, если вы хотите версионировать go.sum
