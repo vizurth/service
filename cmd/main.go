@@ -36,14 +36,14 @@ func main() {
 		logger.GetLoggerFromCtx(ctx).Fatal(ctx, "Failed to connect to database", zap.Error(err))
 	}
 
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%s", cfg.GRPCPort))
+	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s", cfg.GRPCPort))
 
 	if err != nil {
 		logger.GetLoggerFromCtx(ctx).Info(ctx, "failed to listen", zap.Error(err))
 	}
 
-	server := grpc.NewServer(grpc.UnaryInterceptor(loggerInterceprot))
-	srv := service.NewService()
+	server := grpc.NewServer(grpc.UnaryInterceptor(addLogMiddleware))
+	srv := orderservice.NewService()
 
 	test.RegisterOrderServiceServer(server, srv)
 
@@ -73,19 +73,20 @@ func main() {
 	case <-ctx.Done(): // реализация gracefull shot down
 		server.Stop()
 		pool.Close()
-		logger.GetLoggerFromCtx(ctx).Fatal(ctx, "server stopped")
+		logger.GetLoggerFromCtx(ctx).Fatal(ctx, "Server stopped")
 	}
 
 }
 
-func loggerInterceprot(
+func addLogMiddleware(
 	ctx context.Context,
-	req any,
+	req interface{},
 	info *grpc.UnaryServerInfo,
 	handler grpc.UnaryHandler,
-) (any, error) {
+) (interface{}, error) {
 	guid := uuid.New().String()
 	ctx = context.WithValue(ctx, logger.RequestID, guid)
+	ctx, _ = logger.New(ctx)
 	logger.GetLoggerFromCtx(ctx).Info(ctx, "gRPC interception", zap.String("method", info.FullMethod), zap.Time("request time", time.Now()))
 	res, err := handler(ctx, req)
 	return res, err

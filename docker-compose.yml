@@ -13,6 +13,16 @@ services:
     ports:
       - "5432:5432"
     restart: unless-stopped
+  ya_service:
+    container_name: yandex_service
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "50051:50051"
+      - "8081:8081"
+    depends_on:
+      - postgres
 
 
 volumes:
